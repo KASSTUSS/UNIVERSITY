@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAB1</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        #print_elem {
+            display: block;
+            word-wrap: break-word;
+            width: 95%;
+            height: 500px;
+        }
+
+        .anychart-credits-logo, .anychart-credits-text {
+            display: none;
+        }
+        #charts {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: gray;
+            font-family:sans-serif;
+            text-align: center;
+            user-select: none;
+        }
+
+        .charts {
+            margin-bottom: 75px;
+        }
+        .chart__about_chart {
+            font-size: 18px;
+            display: flex;
+            gap: 20px;
+        }
+        .chart__downlowd_img {
+            height: 25px;
+            opacity: .6;
+            transition: .25s;
+        }
+        .chart__downlowd_img:hover {
+            opacity: 1;
+            transition: .25s;
+        }
+
+        .charts__err {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            border: 1px dashed lightgray;
+            padding: 15px;
+            transition: .25s;
+            margin-bottom: 50px;
+        }
+        .charts__err:hover {
+            background-color: #fcfcfc;
+            transition: .25s;
+        }
+
+        .charts__err_text {
+            font-size: 24px;
+            color: lightsalmon;
+        }
+
+
+        [class*="__container"] {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+    </style>
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-base.min.js" type="text/javascript"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-exports.min.js"></script>
+</head>
+<body>
+    <div class="main__container">
+        <div id="charts"></div>
+    </div>
+
+    <script>
+        {
+
+            let chartNum = 0;
+            chart = [];
+
+            function drawChart(data, aboutChart=false) {
+                let chartsElem = document.getElementById("charts");
+                if(aboutChart) {
+                    let divAboutChart = '<div class="chart__about_chart"><div>' + aboutChart.toString() + '</div>' + '<img onclick="downloadChart(' + chartNum + ')" class="chart__downlowd_img" src="https://cdn-icons-png.flaticon.com/512/263/263096.png" alt="Скачать">' +'</div>';
+                    chartsElem.innerHTML += divAboutChart;
+                }
+                try {
+                    chart[chartNum++] = anychart.line();
+                    let divChart = '<div class="charts" id="chart' + chartNum + '" style="width: 400px; height: 400px;"></div>';
+                    chartsElem.innerHTML += divChart;
+
+                    var series = chart[chartNum-1].spline(data);
+                    chart[chartNum-1].container("chart"+chartNum).draw();
+                    
+                } catch(err) {
+                    chartNum++;
+                    let divChart = '<div class="charts__err" id="chart' + chartNum + '" style="width: 400px; height: 400px;"><div>Извините, возникла ошибка подключения библиотеки для построения графиков.</div><div class="charts__err_text">Проверьте подключение к интернету и повторите попытку!</div></div>';
+                    let chartsElem = document.getElementById("charts");
+                    chartsElem.innerHTML += divChart;
+                    console.log(">>Ошибка подключения библиотеки.");
+                }
+            };
+
+            function downloadChart(chartN) {
+                chart[chartN].saveAsPng({"width": 960,"height": 960,"quality": 1,"filename": "График "+(chartN+1).toString()});
+            };
+
+            }; //function drawing and downloading chart 
+        {
+
+        function getRange(start = 0, end, step = 1) {
+            let range = [];
+            let numAfterDecimalPoint = (step.toString().includes('.')) ? (step.toString().split('.').pop().length) : (0);
+            
+            for(let i=0; i<=end; i+=step)
+                range.push(i.toFixed(numAfterDecimalPoint));
+
+            return range;
+        }
+
+        }; //function getting numbers range
+
+
+        let x = [
+            getRange(0, 10, 0.1),
+            getRange(0, 10, 0.1),
+            getRange(0, 10, 0.1),
+            getRange(0, 20, 0.2),
+        ];
+
+        let f = [
+            x => x<=1 ? 0 : 0.5*(x-1),
+            x => x<=2 ? 1 : -0.3*(x-2)+1,
+            x => f[0](x)<=1 ? f[0](x) : 0,
+            x => x<5 ? 0 : ( x<7 ? (x-5)/2 : ( x<12 ? 1 : ( x<16 ? 1-(x-12)/4 : 0 ) ) ),
+        ];
+
+        let dataForChart = [];
+        for(let func = 0; func < x.length; func++) {
+            for(let i=0; i<x[func].length; i++) 
+                dataForChart.push({ x: x[func][i], value: f[func](x[func][i]) });
+
+            drawChart(dataForChart, "График "+(func+1).toString());
+            dataForChart = [];
+        }
+
+        dataForChart = [];
+        for(let i=0; i<x[1].length; i++) {
+            dataForChart.push({ x: x[1][i], value: Math.min(f[1](x[1][i]), f[2](x[1][i])) });
+        }
+        drawChart(dataForChart, "График 5");
+
+        dataForChart = [];
+        for(let i=0; i<x[1].length; i++) {
+            dataForChart.push({ x: x[1][i], value: Math.max(f[1](x[1][i]), f[2](x[1][i])) });
+        }
+        drawChart(dataForChart, "График 6");
+    </script>
+</body>
+</html>
