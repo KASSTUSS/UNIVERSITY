@@ -47,8 +47,9 @@ public class B : A
             return temp;
         }
     }
+}
 
-    class Program
+class Program
     {
         public static void Main()
         {
@@ -76,5 +77,4 @@ public class B : A
             Console.WriteLine("\n\n\n\n\nClick the Enter to close the window...");
             Console.ReadLine();
         }
-    }
 }
