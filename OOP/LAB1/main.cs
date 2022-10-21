@@ -34,7 +34,7 @@ public class Program
 {
     public static void Main()
     {
-        A a = new A0();
+        A a = new A();
         A1 b = new A1();
 
         Console.WriteLine(a.c);
