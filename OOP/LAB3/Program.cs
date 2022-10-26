@@ -32,8 +32,10 @@ public class B : A
     {
         this.d = d;
     }
-    public B() : this(5, 3, 2)
+     public B()
     {
+        this.a = 5;
+        this.b = 3;
         this.d = 2;
     }
     public B(int a) : this(a, 3, 2)
