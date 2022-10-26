@@ -34,4 +34,4 @@ listR = [corr(r, sheetAX).real for r in sheetA]
 
 print(f"Correlation coefficient list: {listR}\n")
 
-print(f"The shortest distance between the wind AX and {listSheets[listR.index(max(listR))]}: {max(listR)}")
+print(f"The shortest distance between the wind AX and {listSheets[list(map(abs,listR)).index(max(list(map(abs,listR))))]}: {max(list(map(abs,listR)))}")
