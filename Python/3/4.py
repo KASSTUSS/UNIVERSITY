@@ -1,7 +1,3 @@
-from operator import sub
-from setuptools import Command
-
-
 ignore = ['duplex', 'alias', 'Current configuration']
 def ignore_command(command, ignore):
     ignore_command = False
